@@ -80,22 +80,22 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
               {notas.length > 0 && <h4 className="secc">Notas de Nácar-Colunga</h4>}
               {notas.map((n, i) => <p key={i} className="ncnotefull">{n.t}</p>)}
               <h4 className="secc">Notas de Mons. Straubinger</h4>
+              <p className="subtit">Juan Straubinger (1883-1956), sacerdote y biblista alemán que, huyendo del nazismo, se estableció en Argentina, donde tradujo toda la Biblia al castellano desde las lenguas originales. Estas notas proceden de su Biblia comentada (la «Biblia Platense», publicada en Argentina a mediados del siglo XX), hoy de dominio público.</p>
               {listaSt === null && <p className="muted">Cargando…</p>}
               {listaSt && listaSt.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
               {listaSt && listaSt.map((e, i) => <NotaSt key={i} e={e} />)}
               <h4 className="secc">Santos Padres</h4>
+              <p className="subtit">De la Catena Aurea, obra que Santo Tomás de Aquino compuso hacia 1262-1264 por encargo del papa Urbano IV: para cada pasaje de los cuatro Evangelios reúne, encadenados, textos de los Padres griegos y latinos. Traducción castellana publicada en mercaba.org.</p>
               {hayCatena && <label className="toggle"><input type="checkbox" checked={prefs.medievales} onChange={e => setPrefs({ ...prefs, medievales: e.target.checked })} /> Incluir también a los comentaristas medievales (Teofilacto, Rábano, Glosa…)</label>}
               {lista === null && <p className="muted">Cargando comentarios…</p>}
               {padErr && <p className="error">{padErr}</p>}
               {lista && lista.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
               {lista && lista.map((e, i) => <Comentario key={i} e={e} a={aut[e.a]} />)}
-              <p className="fuente">Notas: La Sagrada Biblia, traducción y comentario de Mons. Juan Straubinger (1948).</p>
               <h4 className="secc">Comentario bíblico «San Jerónimo»</h4>
+              <p className="subtit">Obra colectiva de biblistas católicos dirigida por Raymond E. Brown, Joseph A. Fitzmyer y Roland E. Murphy (1968), de enfoque histórico-crítico. Se toma de la edición castellana de Ediciones Cristiandad (5 vols., 1971-1972).</p>
               {listaCb === null && <p className="muted">Cargando…</p>}
               {listaCb && listaCb.length === 0 && <p className="muted">Sin comentario para este versículo.</p>}
               {listaCb && listaCb.map((e, i) => <ComentarioCb key={i} e={e} />)}
-              {listaCb && listaCb.length > 0 && <p className="fuente">Comentario bíblico «San Jerónimo», dir. R. E. Brown, J. A. Fitzmyer y R. E. Murphy (Cristiandad, 1971-1972), a partir del escaneo de Internet Archive.</p>}
-              {lista && lista.length > 0 && <p className="fuente">Catena Aurea de Santo Tomás de Aquino: comentarios de los Santos Padres a los Evangelios, en traducción castellana (texto de mercaba.org).</p>}
 
             </div>
           )}

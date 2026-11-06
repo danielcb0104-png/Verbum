@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useRef, useState, useCallback } from 'react'
-import { Ctx, IconBack, IconNext, IconClose, IconNote, IconCopy, IconCross, IconBook } from './App.jsx'
+import { Ctx, IconBack, IconNext, IconClose, IconNote, IconCopy, IconBook } from './App.jsx'
 import * as S from './store.js'
 import { COLORES, POESIA, go, offsetEn, keyV, refMarca } from './util.js'
 import VerseSheet from './VerseSheet.jsx'
@@ -152,7 +152,7 @@ export default function Reader({ route }) {
           </div>
           <div className="acts">
             <button onMouseDown={e => e.preventDefault()} onClick={comentar}><IconNote /> Comentar</button>
-            {sel.type === 'verses' && <button onClick={() => { setSheet({ v: Math.min(...sel.vs) }); setSel(null) }}><IconCross /> Comentarios</button>}
+            {sel.type === 'verses' && <button onClick={() => { setSheet({ v: Math.min(...sel.vs) }); setSel(null) }}>Estudiar</button>}
             <button onMouseDown={e => e.preventDefault()} onClick={copiar}><IconCopy /> Copiar</button>
             <button className="x" aria-label="Cancelar" onClick={() => { window.getSelection()?.removeAllRanges(); setSel(null) }}><IconClose /></button>
           </div>
