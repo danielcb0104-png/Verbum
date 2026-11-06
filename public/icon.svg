@@ -1,1 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#7a2e2e"/><path d="M96 150c56-22 110-20 160 10v236c-50-30-104-32-160-10z" fill="#faf6ef"/><path d="M416 150c-56-22-110-20-160 10v236c50-30 104-32 160-10z" fill="#f1e6d4"/><path d="M256 92v120M222 124h68" stroke="#e8c26a" stroke-width="22" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<defs><radialGradient id="g" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#9c4040"/><stop offset="1" stop-color="#7a2e2e"/></radialGradient></defs><rect width="512" height="512" fill="url(#g)"/>
+<!-- aureola -->
+<circle cx="256" cy="168" r="104" fill="#e3b448" />
+<circle cx="256" cy="168" r="88" fill="none" stroke="#c99a2e" stroke-width="2" opacity="0.6"/>
+<!-- capa negra (cappa) -->
+<path d="M70 512 C78 380 130 300 200 278 L312 278 C382 300 434 380 442 512 Z" fill="#1d1a1a" />
+<!-- hábito blanco -->
+<path d="M196 282 L316 282 C316 360 300 440 296 512 L216 512 C212 440 196 360 196 282 Z" fill="#f4efe4" />
+<!-- capucha / cuello -->
+<path d="M178 268 C196 300 316 300 334 268 C318 252 194 252 178 268 Z" fill="#1d1a1a" />
+<path d="M214 262 C230 286 282 286 298 262" fill="none" stroke="#f4efe4" stroke-width="6"/>
+<!-- cabeza -->
+<path d="M194 170 C194 112 318 112 318 170 C318 214 300 252 256 254 C212 252 194 214 194 170 Z" fill="#f0c9a4" />
+<path d="M226 246 q30 14 60 0" fill="none" stroke="#2a1a12" stroke-width="3" opacity=".35"/>
+<!-- orejas -->
+<ellipse cx="193" cy="185" rx="10" ry="18" fill="#f0c9a4" />
+<ellipse cx="319" cy="185" rx="10" ry="18" fill="#f0c9a4" />
+<!-- corona de pelo (tonsura) -->
+<path d="M196 160 C196 112 316 112 316 160 C306 132 206 132 196 160 Z" fill="#5a3b26" />
+<path d="M196 160 C190 170 192 182 196 190 L200 168 Z M316 160 C322 170 320 182 316 190 L312 168 Z" fill="#5a3b26"/>
+<!-- rasgos -->
+<path d="M222 162 q14 -8 28 -2 M262 160 q14 -6 28 2" fill="none" stroke="#5a3b26" stroke-width="5" stroke-linecap="round"/>
+<ellipse cx="236" cy="178" rx="6" ry="7" fill="#2a1a12"/><ellipse cx="276" cy="178" rx="6" ry="7" fill="#2a1a12"/>
+<path d="M256 182 q-6 22 0 26 q6 2 8 -2" fill="none" stroke="#2a1a12" stroke-width="4" stroke-linecap="round"/>
+<path d="M238 222 q18 10 36 0" fill="none" stroke="#2a1a12" stroke-width="5" stroke-linecap="round"/>
+<!-- sol en el pecho -->
+<g transform="translate(256 330)">
+  <rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(0)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(30)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(60)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(90)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(120)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(150)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(180)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(210)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(240)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(270)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(300)"/><rect x="-3" y="-34" width="6" height="22" rx="3" fill="#e8b33c" transform="rotate(330)"/>
+  <circle r="14" fill="#e8b33c" />
+  
+</g>
+<!-- libro abierto -->
+<g transform="translate(256 420)">
+  <path d="M-128 -40 C-80 -56 -24 -50 0 -32 C24 -50 80 -56 128 -40 L128 52 C80 36 24 40 0 58 C-24 40 -80 36 -128 52 Z" fill="#fbf6ea" stroke="#8a6b3a" stroke-width="4"/>
+  <path d="M0 -32 L0 58" stroke="#8a6b3a" stroke-width="4"/>
+  <path d="M-108 -16 C-76 -24 -40 -22 -18 -12" fill="none" stroke="#6b5536" stroke-width="4" stroke-linecap="round" opacity=".8"/><path d="M18 -12 C40 -22 76 -24 108 -16" fill="none" stroke="#6b5536" stroke-width="4" stroke-linecap="round" opacity=".8"/><path d="M-108 4 C-76 -4 -40 -2 -18 8" fill="none" stroke="#6b5536" stroke-width="4" stroke-linecap="round" opacity=".8"/><path d="M18 8 C40 -2 76 -4 108 4" fill="none" stroke="#6b5536" stroke-width="4" stroke-linecap="round" opacity=".8"/><path d="M-108 24 C-76 16 -40 18 -18 28" fill="none" stroke="#6b5536" stroke-width="4" stroke-linecap="round" opacity=".8"/><path d="M18 28 C40 18 76 16 108 24" fill="none" stroke="#6b5536" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+  <!-- manos -->
+  <ellipse cx="-132" cy="10" rx="20" ry="26" fill="#f0c9a4" />
+  <ellipse cx="132" cy="10" rx="20" ry="26" fill="#f0c9a4" />
+</g>
+
+</svg>
