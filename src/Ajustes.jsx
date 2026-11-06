@@ -56,6 +56,7 @@ export default function Ajustes() {
         <p><b>Texto castellano:</b> Sagrada Biblia, traducción de la Facultad de Teología de la Universidad de Navarra (Biblia de Navarra), según el texto publicado por EWTN. Solo para uso personal.</p>
         <p><b>Latín:</b> Nova Vulgata (Neovulgata), con la misma numeración que el texto castellano.</p>
         <p><b>Notas:</b> La Sagrada Biblia comentada por Mons. Juan Straubinger (1948), dominio público (módulo SWORD de CrossWire).</p>
+        <p><b>Comentario bíblico «San Jerónimo»:</b> dir. R. E. Brown, J. A. Fitzmyer y R. E. Murphy (Cristiandad, 1971-1972), a partir del escaneo de Internet Archive.</p>
         <p><b>Santos Padres:</b> Catena Aurea de Santo Tomás de Aquino (Evangelios), traducción castellana publicada en mercaba.org.</p>
       </section>
     </main>

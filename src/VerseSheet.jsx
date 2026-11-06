@@ -12,12 +12,14 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
   const [aut, setAut] = useState({})
   const [padErr, setPadErr] = useState(null)
   const [st, setSt] = useState(null)
+  const [cb, setCb] = useState(null)
   const v1 = verse.v, v2 = verse.v2 || verse.v
   useEffect(() => {
     S.loadVulgata(book.id).then(setVul).catch(() => setVul([]))
     S.loadAutores().then(setAut).catch(() => {})
     S.loadPadres(book.id, cap).then(setPad).catch(e => { setPad([]); setPadErr(e.message) })
     S.loadStraub(book.id, cap).then(setSt).catch(() => setSt([]))
+    S.loadCbsj(book.id, cap).then(setCb).catch(() => setCb([]))
   }, [book, cap])
   useEffect(() => {
     const k = e => e.key === 'Escape' && onClose()
@@ -34,12 +36,18 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
     return pad.filter(inRange).filter(e => prefs.medievales || (aut[e.a]?.g !== 'M'))
   }, [pad, prefs.medievales, aut, cap, v1, v2])
 
+  const listaCb = useMemo(() => {
+    if (!cb) return null
+    const k = (c, v) => c * 1000 + v
+    return cb.filter(e => k(e.s[0], e.s[1]) <= k(cap, v2) && k(e.e[0], e.e[1]) >= k(cap, v1))
+      .sort((x, y) => (k(x.e[0], x.e[1]) - k(x.s[0], x.s[1])) - (k(y.e[0], y.e[1]) - k(y.s[0], y.s[1])))
+  }, [cb, cap, v1, v2])
   const listaSt = useMemo(() => st ? st.filter(e => e.v >= v1 && e.v <= v2) : null, [st, v1, v2])
   const misMarcas = marcas.filter(m => m.libro === book.id && m.cap === cap && m.v_ini <= v2 && m.v_fin >= v1)
   const latin = vul ? Array.from({ length: v2 - v1 + 1 }, (_, i) => vul[cap - 1]?.[v1 + i]).filter(Boolean).join(' ') : null
   const ref = `${book.abbr} ${cap},${verse.l || v1}${v2 > v1 ? '-' + v2 : ''}`
   const notas = verse.n || []
-  const nCom = notas.length + (lista ? lista.length : 0) + (listaSt ? listaSt.length : 0)
+  const nCom = notas.length + (lista ? lista.length : 0) + (listaSt ? listaSt.length : 0) + (listaCb ? listaCb.length : 0)
   const hayCatena = ['mat', 'mar', 'luc', 'jua'].includes(book.id)
 
   return (
@@ -82,6 +90,11 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
               {lista && lista.length === 0 && <p className="muted">{hayCatena ? 'No hay comentarios de los Padres para este versículo en la Catena Aurea.' : 'De momento solo hay comentarios de los Padres en castellano para los cuatro Evangelios (Catena Aurea). Iremos añadiendo más libros.'}</p>}
               {lista && lista.map((e, i) => <Comentario key={i} e={e} a={aut[e.a]} />)}
               <p className="fuente">Notas: La Sagrada Biblia, traducción y comentario de Mons. Juan Straubinger (1948).</p>
+              <h4 className="secc">Comentario bíblico «San Jerónimo»</h4>
+              {listaCb === null && <p className="muted">Cargando…</p>}
+              {listaCb && listaCb.length === 0 && <p className="muted">Sin comentario para este versículo.</p>}
+              {listaCb && listaCb.map((e, i) => <ComentarioCb key={i} e={e} />)}
+              {listaCb && listaCb.length > 0 && <p className="fuente">Comentario bíblico «San Jerónimo», dir. R. E. Brown, J. A. Fitzmyer y R. E. Murphy (Cristiandad, 1971-1972), a partir del escaneo de Internet Archive.</p>}
               {lista && lista.length > 0 && <p className="fuente">Catena Aurea de Santo Tomás de Aquino: comentarios de los Santos Padres a los Evangelios, en traducción castellana (texto de mercaba.org).</p>}
 
             </div>
@@ -101,6 +114,18 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
         </div>
       </section>
     </div>
+  )
+}
+
+function ComentarioCb({ e }) {
+  const [abierto, setAbierto] = useState(e.q.length < 700)
+  const r = e.s[0] === e.e[0] ? (e.s[1] === e.e[1] ? `${e.s[0]},${e.s[1]}` : `${e.s[0]},${e.s[1]}-${e.e[1]}`) : `${e.s[0]},${e.s[1]}–${e.e[0]},${e.e[1]}`
+  return (
+    <article className="coment">
+      <header><span className="autor cb">{r}</span>{e.t && <span className="anio">{e.t}</span>}</header>
+      <div className={'q' + (abierto ? '' : ' cut')} lang="es">{e.q}</div>
+      {!abierto && <footer><button className="link" onClick={() => setAbierto(true)}>Leer completo</button></footer>}
+    </article>
   )
 }
 
