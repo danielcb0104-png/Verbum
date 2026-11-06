@@ -92,7 +92,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
               {lista && lista.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
               {lista && lista.map((e, i) => <Comentario key={i} e={e} a={aut[e.a]} />)}
               <h4 className="secc">Comentarios papales</h4>
-              <p className="subtit">El Papa, obispo de Roma, es el sucesor de San Pedro, a quien Cristo dijo: «Tú eres Pedro, y sobre esta piedra edificaré mi Iglesia» (Mt 16,18) y confió el encargo de apacentar sus ovejas (Jn 21,15-17) y confirmar en la fe a sus hermanos (Lc 22,32). Como pastor de toda la Iglesia, explica la Palabra de Dios al pueblo cristiano; aquí se recogen comentarios de San Juan Pablo II, Benedicto XVI y Francisco.</p>
+              <p className="subtit">El Papa, obispo de Roma, es el sucesor de San Pedro, a quien Cristo dijo: «Tú eres Pedro, y sobre esta piedra edificaré mi Iglesia» (Mt 16,18) y confió el encargo de apacentar sus ovejas (Jn 21,15-17) y confirmar en la fe a sus hermanos (Lc 22,32). Como pastor de toda la Iglesia, explica la Palabra de Dios al pueblo cristiano.</p>
               {listaPp === null && <p className="muted">Cargando…</p>}
               {listaPp && listaPp.length === 0 && <p className="muted">Sin comentario para este versículo.</p>}
               {listaPp && listaPp.map((e, i) => <ComentarioPapa key={i} e={e} book={book} />)}
