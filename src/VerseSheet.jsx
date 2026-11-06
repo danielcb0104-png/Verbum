@@ -136,7 +136,7 @@ function NotaSt({ e }) {
 
 function Comentario({ e, a }) {
   const [abierto, setAbierto] = useState(e.q.length < 900)
-  const rango = e.pref ? 'Prefacio al evangelio' : (e.s[1] !== e.e[1] ? `sobre los vv. ${e.s[1]}-${e.e[1]}` : `sobre el v. ${e.s[1]}`)
+  const rango = e.pref ? 'Prefacio al evangelio' : e.s[0] !== e.e[0] ? `sobre ${e.s[0]},${e.s[1]}–${e.e[0]},${e.e[1]}` : (e.s[1] !== e.e[1] ? `sobre los vv. ${e.s[1]}-${e.e[1]}` : `sobre el v. ${e.s[1]}`)
   return (
     <article className="coment">
       <header>
