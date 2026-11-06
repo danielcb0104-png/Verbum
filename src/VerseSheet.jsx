@@ -4,7 +4,7 @@ import * as S from './store.js'
 import { siglo } from './autores.js'
 import { refMarca } from './util.js'
 
-export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark }) {
+export default function VerseSheet({ book, cap, verse, text, onClose }) {
   const { prefs, setPrefs, marcas, api, toast, corr } = useContext(Ctx)
   const [tab, setTab] = useState('padres')
   const [vul, setVul] = useState(null)
@@ -99,18 +99,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
 
             </div>
           )}
-          {tab === 'mias' && (
-            <div>
-              {misMarcas.length === 0 && <p className="muted">No tienes notas en este versículo. Para añadir una, toca el versículo y pulsa «Comentar».</p>}
-              {misMarcas.map(m => (
-                <button key={m.id} className={'mymark hlb-' + m.color} onClick={() => onEditMark(m)}>
-                  <span className="mref">{refMarca(book, m)}</span>
-                  <span className="mtext">«{m.texto}»</span>
-                  {m.nota && <span className="mnote">{m.nota}</span>}
-                </button>
-              ))}
-            </div>
-          )}
+          {tab === 'mias' && <MisNotas book={book} cap={cap} v1={v1} v2={v2} text={text} notas={misMarcas} />}
         </div>
       </section>
     </div>
@@ -153,5 +142,59 @@ function Comentario({ e, a }) {
       <div className={'q' + (abierto ? '' : ' cut')} lang="es">{e.q}</div>
       {!abierto && <footer><button className="link" onClick={() => setAbierto(true)}>Leer completo</button></footer>}
     </article>
+  )
+}
+
+function MisNotas({ book, cap, v1, v2, text, notas }) {
+  const { api, toast } = useContext(Ctx)
+  const [edit, setEdit] = useState(null)   // id de la nota que se edita, o 'nueva'
+  const [txt, setTxt] = useState('')
+  const [busy, setBusy] = useState(false)
+  const abrir = (id, t) => { setEdit(id); setTxt(t) }
+  async function guardar(m) {
+    const t = txt.trim(); if (!t) return
+    setBusy(true)
+    try {
+      if (m) await api.update(m.id, { nota: t })
+      else await api.add({ libro: book.id, cap, v_ini: v1, off_ini: 0, v_fin: v2, off_fin: text.length, texto: text, color: 'ninguno', nota: t })
+      setEdit(null)
+    } catch (e) { toast('No se pudo guardar: ' + e.message) } finally { setBusy(false) }
+  }
+  async function borrar(m) {
+    if (!confirm('¿Eliminar esta nota?')) return
+    setBusy(true)
+    try {
+      if (m.color && m.color !== 'ninguno') await api.update(m.id, { nota: null })
+      else await api.remove(m.id)
+      setEdit(null)
+    } catch (e) { toast(e.message) } finally { setBusy(false) }
+  }
+  const editor = m => (
+    <div className="notaedit">
+      <textarea value={txt} onChange={e => setTxt(e.target.value)} rows={5} autoFocus placeholder="Escribe aquí tu reflexión, una referencia, una idea para la oración…" />
+      <div className="row">
+        <button className="btn primary" onClick={() => guardar(m)} disabled={busy || !txt.trim()}>Guardar</button>
+        {m && <button className="btn danger" onClick={() => borrar(m)} disabled={busy}>Eliminar</button>}
+        <button className="btn ghost" onClick={() => setEdit(null)}>Cancelar</button>
+      </div>
+    </div>
+  )
+  return (
+    <div>
+      {notas.length === 0 && edit !== 'nueva' && <p className="muted">No tienes notas en este versículo.</p>}
+      {notas.map(m => edit === m.id ? (
+        <div key={m.id} className={'mymark hlb-' + m.color}>
+          {m.texto !== text && <span className="mtext">«{m.texto}»</span>}
+          {editor(m)}
+        </div>
+      ) : (
+        <button key={m.id} className={'mymark hlb-' + m.color} onClick={() => abrir(m.id, m.nota)}>
+          {m.texto !== text && <span className="mtext">«{m.texto}»</span>}
+          <span className="mnote">{m.nota}</span>
+        </button>
+      ))}
+      {edit === 'nueva' ? <div className="mymark">{editor(null)}</div>
+        : <button className="btn" style={{ marginTop: 8 }} onClick={() => abrir('nueva', '')}>+ Nueva nota</button>}
+    </div>
   )
 }

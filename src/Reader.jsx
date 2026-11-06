@@ -3,7 +3,6 @@ import { Ctx, IconBack, IconNext, IconClose, IconNote, IconCopy, IconBook } from
 import * as S from './store.js'
 import { COLORES, POESIA, go, offsetEn, keyV, refMarca } from './util.js'
 import VerseSheet from './VerseSheet.jsx'
-import MarkEditor from './MarkEditor.jsx'
 
 export default function Reader({ route }) {
   const { bookById, marcas, corr, prefs, api, toast } = useContext(Ctx)
@@ -15,7 +14,6 @@ export default function Reader({ route }) {
   const [pidx, setPidx] = useState(null)
   const [sel, setSel] = useState(null)        // {type:'verses', vs:Set} | {type:'text', r:{...}}
   const [sheet, setSheet] = useState(null)    // {v, tab}
-  const [editor, setEditor] = useState(null)  // {mark} | {range}
   const [nota, setNota] = useState(null)      // nota NC abierta {v, t}
   const boxRef = useRef(null)
 
@@ -98,10 +96,6 @@ export default function Reader({ route }) {
       window.getSelection()?.removeAllRanges(); setSel(null)
     } catch (e) { toast('No se pudo quitar: ' + e.message) }
   }
-  function comentar() {
-    const r = selRange(); if (!r) return
-    setEditor({ range: r }); window.getSelection()?.removeAllRanges(); setSel(null)
-  }
   async function copiar() {
     const r = selRange(); if (!r) return
     const ref = refMarca(book, { cap, v_ini: r.v_ini, v_fin: r.v_fin })
@@ -152,14 +146,13 @@ export default function Reader({ route }) {
         )}
       </main>
 
-      {sel && !editor && !sheet && (
+      {sel && !sheet && (
         <div className="actionbar" role="toolbar" aria-label="Acciones de selección">
           <div className="colors">
             <button className="sw ninguno" title="Sin color" aria-label="Quitar color" onMouseDown={e => e.preventDefault()} onClick={quitarColor}>∅</button>
             {COLORES.map(c => <button key={c.id} className={'sw ' + c.id} title={c.nombre} aria-label={'Marcar en ' + c.nombre} onMouseDown={e => e.preventDefault()} onClick={() => marcar(c.id)} />)}
           </div>
           <div className="acts">
-            <button onMouseDown={e => e.preventDefault()} onClick={comentar}><IconNote /> Comentar</button>
             {sel.type === 'verses' && <button onClick={() => { setSheet({ v: Math.min(...sel.vs) }); setSel(null) }}>Estudiar</button>}
             <button onMouseDown={e => e.preventDefault()} onClick={copiar}><IconCopy /> Copiar</button>
             <button className="x" aria-label="Cancelar" onClick={() => { window.getSelection()?.removeAllRanges(); setSel(null) }}><IconClose /></button>
@@ -167,8 +160,7 @@ export default function Reader({ route }) {
         </div>
       )}
 
-      {sheet && <VerseSheet book={book} cap={cap} verse={verses.find(x => x.v === sheet.v)} text={textOf(verses.find(x => x.v === sheet.v))} onClose={() => setSheet(null)} onEditMark={m => { setSheet(null); setEditor({ mark: m }) }} />}
-      {editor && <MarkEditor book={book} cap={cap} {...editor} onClose={() => setEditor(null)} onStudy={n => { const x = verses.find(y => y.v <= n && n <= (y.v2 || y.v)); setEditor(null); if (x) setSheet({ v: x.v }) }} />}
+      {sheet && <VerseSheet book={book} cap={cap} verse={verses.find(x => x.v === sheet.v)} text={textOf(verses.find(x => x.v === sheet.v))} onClose={() => setSheet(null)} />}
       {nota && (
         <div className="sheet-backdrop" onClick={() => setNota(null)}>
           <div className="popnote" onClick={e => e.stopPropagation()}>
