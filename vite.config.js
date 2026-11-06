@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// BASE: ruta donde se publica (p. ej. "/biblia-nc/" en GitHub Pages)
+// BASE: ruta donde se publica (p. ej. "/Verbum/" en GitHub Pages)
 const base = process.env.BASE || '/'
 
 export default defineConfig({
