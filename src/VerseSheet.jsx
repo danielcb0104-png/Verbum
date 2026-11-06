@@ -57,8 +57,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
           {[
             ['padres', `Comentarios${lista ? ' (' + nCom + ')' : ''}`],
             ['latin', 'Vulgata'],
-            ['mias', `Mías${misMarcas.length ? ' (' + misMarcas.length + ')' : ''}`],
-            ['corregir', 'Corregir']
+            ['mias', `Mías${misMarcas.length ? ' (' + misMarcas.length + ')' : ''}`]
           ].map(([k, l]) => <button key={k} role="tab" aria-selected={tab === k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{l}</button>)}
         </div>
         <div className="sheetbody">
@@ -99,7 +98,6 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
               ))}
             </div>
           )}
-          {tab === 'corregir' && <Corregir book={book} cap={cap} verse={verse} actual={corr} api={api} toast={toast} />}
         </div>
       </section>
     </div>
@@ -130,22 +128,5 @@ function Comentario({ e, a }) {
       <div className={'q' + (abierto ? '' : ' cut')} lang="es">{e.q}</div>
       {!abierto && <footer><button className="link" onClick={() => setAbierto(true)}>Leer completo</button></footer>}
     </article>
-  )
-}
-
-function Corregir({ book, cap, verse, actual, api, toast }) {
-  const key = `${book.id}|${cap}|${verse.v}`
-  const [t, setT] = useState(actual[key] ?? verse.t)
-  const changed = actual[key] !== undefined
-  return (
-    <div className="corregir">
-      <p className="muted">Si encuentras una errata, corrígela aquí; el cambio se guarda solo en tu cuenta.</p>
-      <textarea value={t} onChange={e => setT(e.target.value)} rows={6} />
-      <div className="row">
-        <button className="btn primary" onClick={async () => { try { await api.corregir(book.id, cap, verse.v, t.trim() === verse.t ? null : t.trim()); toast('Corrección guardada') } catch (e) { toast(e.message) } }}>Guardar corrección</button>
-        {changed && <button className="btn" onClick={async () => { await api.corregir(book.id, cap, verse.v, null); setT(verse.t); toast('Restaurado el texto original') }}>Restaurar original</button>}
-      </div>
-      <p className="muted small">Aviso: si el versículo ya tiene marcas a mitad de frase, corrige antes de marcar para que no se desplacen.</p>
-    </div>
   )
 }
