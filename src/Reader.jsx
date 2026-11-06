@@ -89,6 +89,19 @@ export default function Reader({ route }) {
       window.getSelection()?.removeAllRanges(); setSel(null)
     } catch (e) { toast('No se pudo guardar: ' + e.message) }
   }
+  async function quitarColor() {
+    const r = selRange(); if (!r) return
+    const lt = (a, b, c, d) => a < c || (a === c && b < d)
+    const afectadas = capMarcas.filter(m => m.color !== 'ninguno' && lt(m.v_ini, m.off_ini, r.v_fin, r.off_fin) && lt(r.v_ini, r.off_ini, m.v_fin, m.off_fin))
+    try {
+      for (const m of afectadas) {
+        if (m.nota) await api.update(m.id, { color: 'ninguno' })
+        else await api.remove(m.id)
+      }
+      if (!afectadas.length) toast('No hay color que quitar aquí')
+      window.getSelection()?.removeAllRanges(); setSel(null)
+    } catch (e) { toast('No se pudo quitar: ' + e.message) }
+  }
   function comentar() {
     const r = selRange(); if (!r) return
     setEditor({ range: r }); window.getSelection()?.removeAllRanges(); setSel(null)
@@ -146,6 +159,7 @@ export default function Reader({ route }) {
       {sel && !editor && !sheet && (
         <div className="actionbar" role="toolbar" aria-label="Acciones de selección">
           <div className="colors">
+            <button className="sw ninguno" title="Sin color" aria-label="Quitar color" onMouseDown={e => e.preventDefault()} onClick={quitarColor}>∅</button>
             {COLORES.map(c => <button key={c.id} className={'sw ' + c.id} title={c.nombre} aria-label={'Marcar en ' + c.nombre} onMouseDown={e => e.preventDefault()} onClick={() => marcar(c.id)} />)}
           </div>
           <div className="acts">
