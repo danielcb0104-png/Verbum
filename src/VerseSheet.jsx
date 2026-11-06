@@ -12,14 +12,14 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
   const [aut, setAut] = useState({})
   const [padErr, setPadErr] = useState(null)
   const [st, setSt] = useState(null)
-  const [cb, setCb] = useState(null)
+  const [pp, setPp] = useState(null)
   const v1 = verse.v, v2 = verse.v2 || verse.v
   useEffect(() => {
     S.loadVulgata(book.id).then(setVul).catch(() => setVul([]))
     S.loadAutores().then(setAut).catch(() => {})
     S.loadPadres(book.id, cap).then(setPad).catch(e => { setPad([]); setPadErr(e.message) })
     S.loadStraub(book.id, cap).then(setSt).catch(() => setSt([]))
-    S.loadCbsj(book.id, cap).then(setCb).catch(() => setCb([]))
+    S.loadPapas(book.id).then(setPp).catch(() => setPp([]))
   }, [book, cap])
   useEffect(() => {
     const k = e => e.key === 'Escape' && onClose()
@@ -36,18 +36,18 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
     return pad.filter(inRange).filter(e => prefs.medievales || (aut[e.a]?.g !== 'M'))
   }, [pad, prefs.medievales, aut, cap, v1, v2])
 
-  const listaCb = useMemo(() => {
-    if (!cb) return null
+  const listaPp = useMemo(() => {
+    if (!pp) return null
     const k = (c, v) => c * 1000 + v
-    return cb.filter(e => k(e.s[0], e.s[1]) <= k(cap, v2) && k(e.e[0], e.e[1]) >= k(cap, v1))
-      .sort((x, y) => (k(x.e[0], x.e[1]) - k(x.s[0], x.s[1])) - (k(y.e[0], y.e[1]) - k(y.s[0], y.s[1])))
-  }, [cb, cap, v1, v2])
+    return pp.filter(e => k(e.s[0], e.s[1]) <= k(cap, v2) && k(e.e[0], e.e[1]) >= k(cap, v1))
+      .sort((x, y) => x.d < y.d ? -1 : 1)
+  }, [pp, cap, v1, v2])
   const listaSt = useMemo(() => st ? st.filter(e => e.v >= v1 && e.v <= v2) : null, [st, v1, v2])
   const misMarcas = marcas.filter(m => m.nota && m.libro === book.id && m.cap === cap && m.v_ini <= v2 && m.v_fin >= v1)
   const latin = vul ? Array.from({ length: v2 - v1 + 1 }, (_, i) => vul[cap - 1]?.[v1 + i]).filter(Boolean).join(' ') : null
   const ref = `${book.abbr} ${cap},${verse.l || v1}${v2 > v1 ? '-' + v2 : ''}`
   const notas = verse.n || []
-  const nCom = notas.length + (lista ? lista.length : 0) + (listaSt ? listaSt.length : 0) + (listaCb ? listaCb.length : 0)
+  const nCom = notas.length + (lista ? lista.length : 0) + (listaSt ? listaSt.length : 0) + (listaPp ? listaPp.length : 0)
   const hayCatena = ['mat', 'mar', 'luc', 'jua'].includes(book.id)
 
   return (
@@ -91,11 +91,11 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
               {padErr && <p className="error">{padErr}</p>}
               {lista && lista.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
               {lista && lista.map((e, i) => <Comentario key={i} e={e} a={aut[e.a]} />)}
-              <h4 className="secc">Comentario bíblico «San Jerónimo»</h4>
-              <p className="subtit">Obra colectiva de biblistas católicos dirigida por Raymond E. Brown, Joseph A. Fitzmyer y Roland E. Murphy (1968), de enfoque histórico-crítico. Se toma de la edición castellana de Ediciones Cristiandad (5 vols., 1971-1972).</p>
-              {listaCb === null && <p className="muted">Cargando…</p>}
-              {listaCb && listaCb.length === 0 && <p className="muted">Sin comentario para este versículo.</p>}
-              {listaCb && listaCb.map((e, i) => <ComentarioCb key={i} e={e} />)}
+              <h4 className="secc">Comentarios papales</h4>
+              <p className="subtit">Catequesis de San Juan Pablo II y Benedicto XVI sobre los salmos y cánticos de Laudes y Vísperas (2001-2006), y alocuciones del Ángelus y Regina Caeli de Benedicto XVI y Francisco sobre el Evangelio del domingo. Textos oficiales en castellano de la Santa Sede (vatican.va). En las catequesis, los salmos se citan con la numeración litúrgica, que a menudo es uno menos que la de esta Biblia.</p>
+              {listaPp === null && <p className="muted">Cargando…</p>}
+              {listaPp && listaPp.length === 0 && <p className="muted">Sin comentario para este versículo.</p>}
+              {listaPp && listaPp.map((e, i) => <ComentarioPapa key={i} e={e} book={book} />)}
 
             </div>
           )}
@@ -106,14 +106,20 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
   )
 }
 
-function ComentarioCb({ e }) {
-  const [abierto, setAbierto] = useState(e.q.length < 700)
+const MESES = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']
+function ComentarioPapa({ e, book }) {
+  const [abierto, setAbierto] = useState(false)
+  const [y, m, d] = e.d.split('-').map(Number)
   const r = e.s[0] === e.e[0] ? (e.s[1] === e.e[1] ? `${e.s[0]},${e.s[1]}` : `${e.s[0]},${e.s[1]}-${e.e[1]}`) : `${e.s[0]},${e.s[1]}–${e.e[0]},${e.e[1]}`
   return (
-    <article className="coment">
-      <header><span className="autor cb">{r}</span>{e.t && <span className="anio">{e.t}</span>}</header>
+    <article className="coment papa">
+      <header><span className="autor">{e.p}</span><span className="anio">{e.k}, {d}-{MESES[m - 1]}-{y}</span></header>
+      <div className="ptit">{e.t || 'Comentario al Evangelio del día'} <span className="muted small">({book.abbr} {r})</span></div>
       <div className={'q' + (abierto ? '' : ' cut')} lang="es">{e.q}</div>
-      {!abierto && <footer><button className="link" onClick={() => setAbierto(true)}>Leer completo</button></footer>}
+      <footer>
+        {!abierto && <button className="link" onClick={() => setAbierto(true)}>Leer completo</button>}
+        <a className="link small" href={e.u} target="_blank" rel="noopener">Ver en vatican.va</a>
+      </footer>
     </article>
   )
 }

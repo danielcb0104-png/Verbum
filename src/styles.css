@@ -199,6 +199,8 @@ div.mymark { cursor: default; }
 .subtit { font-family: var(--sans); font-size: 12.5px; line-height: 1.45; color: var(--ink2); font-style: italic; margin: 0 0 10px; }
 
 .autor.cb { font-family: var(--sans); font-size: 14px; color: var(--acc); }
+.ptit { font-family: var(--sans); font-weight: 600; font-size: 14px; margin: 4px 0 6px; color: var(--ink); }
+.coment.papa .q { white-space: pre-line; }
 
 .invform { display: grid; gap: 8px; margin: 10px 0; }
 .invform input { font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
