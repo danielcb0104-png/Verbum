@@ -103,6 +103,55 @@ export default function Reader({ route }) {
     window.getSelection()?.removeAllRanges(); setSel(null)
   }
 
+  // pasar de capítulo arrastrando el dedo a izquierda/derecha
+  const navRef = useRef({})
+  navRef.current = { prev: book && cap > 1 ? `#/l/${book.id}/${cap - 1}` : null, next: book && cap < book.ch.length ? `#/l/${book.id}/${cap + 1}` : null, bloqueado: !!(sheet || nota) }
+  useEffect(() => { setSel(null) }, [book, cap])
+  useEffect(() => {
+    const el = boxRef.current
+    if (!el) return
+    let t = null
+    const reset = () => { el.style.transition = 'transform .18s ease, opacity .18s ease'; el.style.transform = ''; el.style.opacity = '' }
+    const start = e => {
+      if (e.touches.length !== 1 || navRef.current.bloqueado) { t = null; return }
+      const p = e.touches[0]
+      t = { x: p.clientX, y: p.clientY, t: Date.now(), modo: null, dx: 0 }
+    }
+    const move = e => {
+      if (!t) return
+      const p = e.touches[0], dx = p.clientX - t.x, dy = p.clientY - t.y
+      if (!t.modo) {
+        if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return
+        const selTxt = window.getSelection()?.toString()
+        t.modo = Math.abs(dx) > Math.abs(dy) * 1.6 && !selTxt ? 'h' : 'v'
+      }
+      if (t.modo !== 'h') return
+      const destino = dx < 0 ? navRef.current.next : navRef.current.prev
+      t.dx = dx
+      el.style.transition = 'none'
+      el.style.transform = `translateX(${dx * (destino ? 0.5 : 0.15)}px)`
+      el.style.opacity = destino ? String(Math.max(0.4, 1 - Math.abs(dx) / 500)) : ''
+    }
+    const end = () => {
+      if (!t) return
+      const { modo, dx, t: t0 } = t; t = null
+      if (modo !== 'h') return
+      const rapido = Math.abs(dx) > 40 && Date.now() - t0 < 300
+      const destino = dx < 0 ? navRef.current.next : navRef.current.prev
+      if (destino && (Math.abs(dx) > 90 || rapido)) {
+        window.getSelection()?.removeAllRanges()
+        el.style.transition = 'transform .15s ease, opacity .15s ease'
+        el.style.transform = `translateX(${dx < 0 ? -60 : 60}px)`; el.style.opacity = '0'
+        setTimeout(() => { location.hash = destino; el.style.transition = 'none'; el.style.transform = `translateX(${dx < 0 ? 40 : -40}px)`; requestAnimationFrame(() => requestAnimationFrame(reset)) }, 150)
+      } else reset()
+    }
+    el.addEventListener('touchstart', start, { passive: true })
+    el.addEventListener('touchmove', move, { passive: true })
+    el.addEventListener('touchend', end, { passive: true })
+    el.addEventListener('touchcancel', reset, { passive: true })
+    return () => { el.removeEventListener('touchstart', start); el.removeEventListener('touchmove', move); el.removeEventListener('touchend', end); el.removeEventListener('touchcancel', reset) }
+  }, [book])
+
   if (!book) return <main className="page"><p>Libro no encontrado.</p><a href="#/">Volver al índice</a></main>
   const prev = cap > 1 ? `#/l/${book.id}/${cap - 1}` : null
   const next = cap < book.ch.length ? `#/l/${book.id}/${cap + 1}` : null

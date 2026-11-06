@@ -84,7 +84,7 @@ textarea { font-family: var(--serif); line-height: 1.5; resize: vertical; }
 .readhead { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 2px; padding: calc(6px + env(safe-area-inset-top, 0px)) 8px 6px; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .readtitle { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); text-decoration: none; padding: 6px; }
 .spacer { flex: 1; }
-.text { max-width: 720px; margin: 0 auto; padding: 8px 18px calc(150px + var(--safe-b)); font-family: var(--serif); font-size: var(--fs); line-height: 1.65; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.text { max-width: 720px; margin: 0 auto; padding: 8px 18px calc(150px + var(--safe-b)); font-family: var(--serif); font-size: var(--fs); line-height: 1.65; text-align: justify; hyphens: auto; -webkit-hyphens: auto; touch-action: pan-y pinch-zoom; }
 .chaphead { text-align: center; font-weight: 500; color: var(--acc); font-size: 1.25em; margin: 18px 0 6px; letter-spacing: .03em; }
 .vhead { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: .9em; text-align: center; color: var(--ink2); margin: 1.2em 0 .4em; }
 .verse { scroll-margin-top: 90px; border-radius: 4px; }
