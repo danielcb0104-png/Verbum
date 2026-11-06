@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { Ctx, IconClose } from './App.jsx'
 import { COLORES, refMarca } from './util.js'
 
-export default function MarkEditor({ book, cap, mark, range, onClose }) {
+export default function MarkEditor({ book, cap, mark, range, onClose, onStudy }) {
   const { api, toast } = useContext(Ctx)
   const base = mark || { ...range, libro: book.id, cap }
   const [color, setColor] = useState(mark ? mark.color : 'ninguno')
@@ -42,6 +42,7 @@ export default function MarkEditor({ book, cap, mark, range, onClose }) {
           </label>
           <div className="row">
             <button className="btn primary" onClick={guardar} disabled={busy || (color === 'ninguno' && !nota.trim())}>Guardar</button>
+            {mark && onStudy && <button className="btn" onClick={() => onStudy(mark.v_ini)}>Estudiar</button>}
             {mark && <button className="btn danger" onClick={borrar} disabled={busy}>Eliminar</button>}
             <button className="btn ghost" onClick={onClose}>Cancelar</button>
           </div>

@@ -67,8 +67,6 @@ export default function Reader({ route }) {
     if (nb) { const n = verses.find(x => x.v === v.v)?.n?.[+nb.dataset.nota]; if (n) setNota({ v: v.v, t: n.t }); return }
     const um = e.target.closest('[data-um]')
     if (um) { const m = marcas.find(x => x.id === um.dataset.um); if (m) { setEditor({ mark: m }); return } }
-    const hl = e.target.closest('[data-mid]')
-    if (hl) { const m = marcas.find(x => x.id === hl.dataset.mid); if (m) { setEditor({ mark: m }); return } }
     setSel(x => {
       const vs = new Set(x?.type === 'verses' ? x.vs : [])
       vs.has(v.v) ? vs.delete(v.v) : vs.add(v.v)
@@ -160,7 +158,7 @@ export default function Reader({ route }) {
       )}
 
       {sheet && <VerseSheet book={book} cap={cap} verse={verses.find(x => x.v === sheet.v)} text={textOf(verses.find(x => x.v === sheet.v))} onClose={() => setSheet(null)} onEditMark={m => { setSheet(null); setEditor({ mark: m }) }} />}
-      {editor && <MarkEditor book={book} cap={cap} {...editor} onClose={() => setEditor(null)} />}
+      {editor && <MarkEditor book={book} cap={cap} {...editor} onClose={() => setEditor(null)} onStudy={n => { const x = verses.find(y => y.v <= n && n <= (y.v2 || y.v)); setEditor(null); if (x) setSheet({ v: x.v }) }} />}
       {nota && (
         <div className="sheet-backdrop" onClick={() => setNota(null)}>
           <div className="popnote" onClick={e => e.stopPropagation()}>
