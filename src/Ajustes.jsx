@@ -97,7 +97,8 @@ export default function Ajustes() {
         <p><b>Latín:</b> Nova Vulgata (Neovulgata), con la misma numeración que el texto castellano.</p>
         <p><b>Notas:</b> La Sagrada Biblia comentada por Mons. Juan Straubinger (1948), dominio público (módulo SWORD de CrossWire).</p>
         <p><b>Comentarios papales:</b> catequesis de San Juan Pablo II y Benedicto XVI sobre los salmos y cánticos de Laudes y Vísperas, y Ángelus y Regina Caeli de Benedicto XVI y Francisco; textos oficiales de la Santa Sede (vatican.va).</p>
-        <p><b>Santos Padres:</b> Catena Aurea de Santo Tomás de Aquino (Evangelios), traducción castellana publicada en mercaba.org.</p>
+        <p><b>Comentario de los Profesores de Salamanca:</b> «Biblia comentada» (BAC, 1960-1965), según el texto publicado en mercaba.org.</p>
+        <p><b>Santos Padres:</b> Catena Aurea de Santo Tomás de Aquino (Evangelios), traducción castellana publicada en mercaba.org; homilías de San Juan Crisóstomo sobre los Hechos de los Apóstoles y la Carta a los Romanos (Apostolado Mariano, Sevilla), según los escaneos de mercaba.es.</p>
       </section>
     </main>
   )

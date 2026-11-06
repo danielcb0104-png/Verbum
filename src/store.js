@@ -42,6 +42,12 @@ async function loadPrivate(path) {
   return d
 }
 export const loadNC = id => cached('nc:' + id, () => loadPrivate(`navarra/${id}.json`))
+export const loadBcIndex = () => cached('bcidx', () => loadPrivate('bc/index.json'))
+export const loadBc = (id, c) => cached(`bc:${id}:${c}`, async () => {
+  const idx = await loadBcIndex()
+  if (!idx[id] || !idx[id].includes(c)) return []
+  return loadPrivate(`bc/${id}/${c}.json`)
+})
 export const loadPapasIndex = () => cached('ppidx', () => loadPrivate('papas/index.json'))
 export const loadPapas = id => cached('pp:' + id, async () => {
   const idx = await loadPapasIndex()

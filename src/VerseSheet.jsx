@@ -13,6 +13,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
   const [padErr, setPadErr] = useState(null)
   const [st, setSt] = useState(null)
   const [pp, setPp] = useState(null)
+  const [bc, setBc] = useState(null)
   const v1 = verse.v, v2 = verse.v2 || verse.v
   useEffect(() => {
     S.loadVulgata(book.id).then(setVul).catch(() => setVul([]))
@@ -20,6 +21,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
     S.loadPadres(book.id, cap).then(setPad).catch(e => { setPad([]); setPadErr(e.message) })
     S.loadStraub(book.id, cap).then(setSt).catch(() => setSt([]))
     S.loadPapas(book.id).then(setPp).catch(() => setPp([]))
+    S.loadBc(book.id, cap).then(setBc).catch(() => setBc([]))
   }, [book, cap])
   useEffect(() => {
     const k = e => e.key === 'Escape' && onClose()
@@ -42,12 +44,17 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
     return pp.filter(e => k(e.s[0], e.s[1]) <= k(cap, v2) && k(e.e[0], e.e[1]) >= k(cap, v1))
       .sort((x, y) => x.d < y.d ? -1 : 1)
   }, [pp, cap, v1, v2])
+  const listaBc = useMemo(() => {
+    if (!bc) return null
+    return bc.filter(e => e.s[1] <= v2 && e.e[1] >= v1)
+      .sort((x, y) => (x.i ? 1 : 0) - (y.i ? 1 : 0) || (x.e[1] - x.s[1]) - (y.e[1] - y.s[1]))
+  }, [bc, v1, v2])
   const listaSt = useMemo(() => st ? st.filter(e => e.v >= v1 && e.v <= v2) : null, [st, v1, v2])
   const misMarcas = marcas.filter(m => m.nota && m.libro === book.id && m.cap === cap && m.v_ini <= v2 && m.v_fin >= v1)
   const latin = vul ? Array.from({ length: v2 - v1 + 1 }, (_, i) => vul[cap - 1]?.[v1 + i]).filter(Boolean).join(' ') : null
   const ref = `${book.abbr} ${cap},${verse.l || v1}${v2 > v1 ? '-' + v2 : ''}`
   const notas = verse.n || []
-  const nCom = notas.length + (lista ? lista.length : 0) + (listaSt ? listaSt.length : 0) + (listaPp ? listaPp.length : 0)
+  const nCom = notas.length + (lista ? lista.length : 0) + (listaSt ? listaSt.length : 0) + (listaBc ? listaBc.length : 0) + (listaPp ? listaPp.length : 0)
   const hayCatena = ['mat', 'mar', 'luc', 'jua'].includes(book.id)
 
   return (
@@ -84,6 +91,11 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
               {listaSt === null && <p className="muted">Cargando…</p>}
               {listaSt && listaSt.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
               {listaSt && listaSt.map((e, i) => <NotaSt key={i} e={e} />)}
+              <h4 className="secc">Comentario de los Profesores de Salamanca</h4>
+              <p className="subtit">Comentario de los Profesores de Salamanca (Alberto Colunga y Maximiliano García Cordero, dominicos, con Luis Arnaldich, Manuel de Tuya y Lorenzo Turrado), publicado por la Biblioteca de Autores Cristianos entre 1960 y 1965: una exposición católica de toda la Sagrada Escritura, pasaje por pasaje.</p>
+              {listaBc === null && <p className="muted">Cargando…</p>}
+              {listaBc && listaBc.length === 0 && <p className="muted">Sin comentario para este versículo.</p>}
+              {listaBc && listaBc.map((e, i) => <ComentarioBc key={i} e={e} cap={cap} />)}
               <h4 className="secc">Santos Padres</h4>
               <p className="subtit">Los Santos Padres son los escritores cristianos de los primeros siglos —como San Agustín, San Juan Crisóstomo, San Jerónimo o San Gregorio Magno— a quienes la Iglesia reconoce por la santidad de su vida y la rectitud de su doctrina como testigos privilegiados de la Tradición. Sus comentarios han sido desde la antigüedad una guía para leer la Escritura con la fe de la Iglesia.</p>
               {hayCatena && <label className="toggle"><input type="checkbox" checked={prefs.medievales} onChange={e => setPrefs({ ...prefs, medievales: e.target.checked })} /> Incluir también a los comentaristas medievales (Teofilacto, Rábano, Glosa…)</label>}
@@ -120,6 +132,18 @@ function ComentarioPapa({ e, book }) {
         {!abierto && <button className="link" onClick={() => setAbierto(true)}>Leer completo</button>}
         <a className="link small" href={e.u} target="_blank" rel="noopener">Ver en vatican.va</a>
       </footer>
+    </article>
+  )
+}
+
+function ComentarioBc({ e, cap }) {
+  const [abierto, setAbierto] = useState(e.q.length < 900)
+  const r = e.s[1] === e.e[1] ? `v. ${e.s[1]}` : `vv. ${e.s[1]}-${e.e[1]}`
+  return (
+    <article className="coment">
+      <div className="ptit">{e.i ? (e.t || 'Introducción') : (e.t || 'Comentario')} <span className="muted small">({e.i ? 'introducción' : r})</span></div>
+      <div className={'q' + (abierto ? '' : ' cut')} lang="es">{e.q}</div>
+      {!abierto && <footer><button className="link" onClick={() => setAbierto(true)}>Leer completo</button></footer>}
     </article>
   )
 }
