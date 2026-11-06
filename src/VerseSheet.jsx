@@ -92,7 +92,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
               {lista && lista.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
               {lista && lista.map((e, i) => <Comentario key={i} e={e} a={aut[e.a]} />)}
               <h4 className="secc">Comentarios papales</h4>
-              <p className="subtit">Catequesis de San Juan Pablo II y Benedicto XVI sobre los salmos y cánticos de Laudes y Vísperas (2001-2006), y alocuciones del Ángelus y Regina Caeli de Benedicto XVI y Francisco sobre el Evangelio del domingo. Textos oficiales en castellano de la Santa Sede (vatican.va). En las catequesis, los salmos se citan con la numeración litúrgica, que a menudo es uno menos que la de esta Biblia.</p>
+              <p className="subtit">Catequesis de San Juan Pablo II y Benedicto XVI sobre los salmos y cánticos de Laudes y Vísperas (2001-2006) y de Benedicto XVI sobre otros salmos (2011), y alocuciones del Ángelus y Regina Caeli de Benedicto XVI y Francisco sobre el Evangelio del domingo. Textos oficiales en castellano de la Santa Sede (vatican.va). En las catequesis, los salmos se citan con la numeración litúrgica, que a menudo es uno menos que la de esta Biblia.</p>
               {listaPp === null && <p className="muted">Cargando…</p>}
               {listaPp && listaPp.length === 0 && <p className="muted">Sin comentario para este versículo.</p>}
               {listaPp && listaPp.map((e, i) => <ComentarioPapa key={i} e={e} book={book} />)}
