@@ -80,6 +80,27 @@ export async function signUp(email, password) {
   const { error } = await supabase.auth.signUp({ email, password })
   if (error) throw error
 }
+// ---------------- acceso e invitaciones ----------------
+export async function miAcceso() {
+  if (LOCAL) return { miembro: true, admin: true }
+  const [m, a] = await Promise.all([supabase.rpc('es_miembro'), supabase.rpc('es_admin')])
+  if (m.error) throw m.error
+  return { miembro: !!m.data, admin: !!a.data }
+}
+export async function listInvitaciones() {
+  if (LOCAL) return []
+  const { data, error } = await supabase.from('invitaciones').select('*').order('created_at', { ascending: false })
+  if (error) throw error
+  return data
+}
+export async function addInvitacion(email, nombre) {
+  const { error } = await supabase.from('invitaciones').insert({ email: email.trim().toLowerCase(), nombre: nombre?.trim() || null })
+  if (error) throw new Error(error.code === '23505' ? 'Ese correo ya está invitado' : error.message)
+}
+export async function delInvitacion(email) {
+  const { error } = await supabase.from('invitaciones').delete().eq('email', email)
+  if (error) throw error
+}
 export async function signOut() { if (!LOCAL) await supabase.auth.signOut() }
 
 // ---------------- marcas y comentarios ----------------

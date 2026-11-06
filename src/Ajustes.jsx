@@ -1,9 +1,48 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Ctx } from './App.jsx'
 import * as S from './store.js'
 
+function Invitaciones() {
+  const { toast } = useContext(Ctx)
+  const [lista, setLista] = useState(null)
+  const [email, setEmail] = useState('')
+  const [nombre, setNombre] = useState('')
+  const cargar = () => S.listInvitaciones().then(setLista).catch(e => toast(e.message))
+  useEffect(() => { cargar() }, [])
+  const url = location.origin + location.pathname
+  async function invitar(e) {
+    e.preventDefault()
+    try { await S.addInvitacion(email, nombre); setEmail(''); setNombre(''); cargar(); toast('Invitación añadida') } catch (err) { toast(err.message) }
+  }
+  async function compartir(i) {
+    const txt = `${i.nombre ? i.nombre + ', t' : 'T'}e invito a la app de la Sagrada Biblia. Entra en ${url}, pulsa «¿Primera vez? Crear cuenta» y regístrate con este correo: ${i.email}`
+    try { if (navigator.share) await navigator.share({ text: txt }); else { await navigator.clipboard.writeText(txt); toast('Mensaje copiado') } } catch { /* cancelado */ }
+  }
+  return (
+    <section className="card">
+      <h2>Invitar personas</h2>
+      <p className="muted">Solo podrán crear cuenta los correos que añadas aquí. Cada persona tiene sus propias marcas y comentarios, que nadie más ve.</p>
+      <form className="invform" onSubmit={invitar}>
+        <input type="email" required placeholder="correo@ejemplo.com" value={email} onChange={e => setEmail(e.target.value)} />
+        <input type="text" placeholder="Nombre (opcional)" value={nombre} onChange={e => setNombre(e.target.value)} />
+        <button className="btn primary">Invitar</button>
+      </form>
+      {lista && lista.length === 0 && <p className="muted small">Aún no has invitado a nadie.</p>}
+      {lista && lista.map(i => (
+        <div key={i.email} className="setrow">
+          <span>{i.nombre ? <b>{i.nombre}</b> : null} {i.nombre ? <br /> : null}<span className="muted small">{i.email}</span></span>
+          <span className="row" style={{ marginTop: 0 }}>
+            <button className="btn small" onClick={() => compartir(i)}>Enviar enlace</button>
+            <button className="btn small danger" onClick={async () => { if (confirm('¿Quitar la invitación de ' + i.email + '? Dejará de tener acceso al texto.')) { await S.delInvitacion(i.email).catch(e => toast(e.message)); cargar() } }}>Quitar</button>
+          </span>
+        </div>
+      ))}
+    </section>
+  )
+}
+
 export default function Ajustes() {
-  const { prefs, setPrefs, session, books, marcas, toast } = useContext(Ctx)
+  const { prefs, setPrefs, session, books, marcas, toast, admin } = useContext(Ctx)
   const [prog, setProg] = useState(null)
   const set = (k, v) => setPrefs({ ...prefs, [k]: v })
   async function descargarTodo() {
@@ -43,6 +82,7 @@ export default function Ajustes() {
         <p className="muted">Descarga los 73 libros (≈4 MB) para leer sin internet. Los comentarios se guardan a medida que los consultas.</p>
         <button className="btn" onClick={descargarTodo} disabled={prog !== null && prog < 100}>{prog === null ? 'Descargar toda la Biblia' : prog < 100 ? `Descargando… ${prog}%` : 'Descargada ✓'}</button>
       </section>
+      {admin && !S.LOCAL && <Invitaciones />}
       <section className="card">
         <h2>Cuenta</h2>
         <p className="muted">{S.LOCAL ? 'Modo local (sin Supabase): las marcas se guardan solo en este navegador.' : 'Sesión: ' + session?.user?.email}</p>

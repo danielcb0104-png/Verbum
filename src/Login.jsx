@@ -11,8 +11,11 @@ export default function Login() {
     e.preventDefault(); setBusy(true); setMsg(null)
     try {
       if (modo === 'entrar') await signIn(email, pw)
-      else { await signUp(email, pw); setMsg('Cuenta creada. Si Supabase pide confirmación, revisa tu correo y luego entra.') }
-    } catch (err) { setMsg(err.message) } finally { setBusy(false) }
+      else { await signUp(email, pw); try { await signIn(email, pw) } catch { setMsg('Cuenta creada. Ya puedes entrar.') } }
+    } catch (err) {
+      const m = err.message || ''
+      setMsg(/database error|invitaci/i.test(m) ? 'Este correo no tiene invitación. Pide a quien te recomendó la app que te invite con este correo.' : /invalid login/i.test(m) ? 'Correo o contraseña incorrectos.' : m)
+    } finally { setBusy(false) }
   }
   return (
     <div className="login">

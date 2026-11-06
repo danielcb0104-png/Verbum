@@ -18,6 +18,7 @@ export default function App() {
   const [corr, setCorr] = useState({})
   const [prefs, setPrefsState] = useState(S.loadPrefs())
   const [toast, setToast] = useState(null)
+  const [acceso, setAcceso] = useState(null)
 
   useEffect(() => {
     S.getSession().then(setSession)
@@ -29,6 +30,10 @@ export default function App() {
     return () => window.removeEventListener('hashchange', f)
   }, [])
   useEffect(() => { S.loadBooks().then(setBooks).catch(e => setToast(e.message)) }, [])
+  useEffect(() => {
+    if (!session) { setAcceso(null); return }
+    S.miAcceso().then(setAcceso).catch(() => setAcceso({ miembro: true, admin: false }))
+  }, [session])
   useEffect(() => {
     if (!session) return
     S.listMarcas().then(setMarcas).catch(async e => {
@@ -60,8 +65,17 @@ export default function App() {
 
   if (session === undefined) return <div className="splash">Cargando…</div>
   if (!session) return <Login />
+  if (!acceso) return <div className="splash">Cargando…</div>
+  if (!acceso.miembro) return (
+    <div className="login"><div className="login-card">
+      <div className="login-cross" aria-hidden="true">✠</div>
+      <h1>Sin acceso</h1>
+      <p className="sub">Tu cuenta ({session.user?.email}) todavía no tiene invitación. Pide a quien te recomendó la app que te invite con este correo.</p>
+      <button className="btn" onClick={() => S.signOut()}>Cerrar sesión</button>
+    </div></div>
+  )
 
-  const ctx = { books, bookById, marcas, corr, prefs, setPrefs, api, toast: setToast, session }
+  const ctx = { books, bookById, marcas, corr, prefs, setPrefs, api, toast: setToast, session, admin: acceso.admin }
   let view
   if (!books) view = <div className="splash">Cargando…</div>
   else if (route.view === 'leer') view = <Reader key={route.libro + route.cap} route={route} />

@@ -193,3 +193,6 @@ textarea { font-family: var(--serif); line-height: 1.5; resize: vertical; }
 .secc:first-child { margin-top: 2px; }
 
 .autor.cb { font-family: var(--sans); font-size: 14px; color: var(--acc); }
+
+.invform { display: grid; gap: 8px; margin: 10px 0; }
+.invform input { font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
