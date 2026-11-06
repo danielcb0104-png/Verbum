@@ -11,11 +11,13 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
   const [pad, setPad] = useState(null)
   const [aut, setAut] = useState({})
   const [padErr, setPadErr] = useState(null)
+  const [st, setSt] = useState(null)
   const v1 = verse.v, v2 = verse.v2 || verse.v
   useEffect(() => {
     S.loadVulgata(book.id).then(setVul).catch(() => setVul([]))
     S.loadAutores().then(setAut).catch(() => {})
     S.loadPadres(book.id, cap).then(setPad).catch(e => { setPad([]); setPadErr(e.message) })
+    S.loadStraub(book.id, cap).then(setSt).catch(() => setSt([]))
   }, [book, cap])
   useEffect(() => {
     const k = e => e.key === 'Escape' && onClose()
@@ -32,11 +34,12 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
     return pad.filter(inRange).filter(e => prefs.medievales || (aut[e.a]?.g !== 'M'))
   }, [pad, prefs.medievales, aut, cap, v1, v2])
 
+  const listaSt = useMemo(() => st ? st.filter(e => e.v >= v1 && e.v <= v2) : null, [st, v1, v2])
   const misMarcas = marcas.filter(m => m.libro === book.id && m.cap === cap && m.v_ini <= v2 && m.v_fin >= v1)
   const latin = vul ? Array.from({ length: v2 - v1 + 1 }, (_, i) => vul[cap - 1]?.[v1 + i]).filter(Boolean).join(' ') : null
   const ref = `${book.abbr} ${cap},${verse.l || v1}${v2 > v1 ? '-' + v2 : ''}`
   const notas = verse.n || []
-  const nCom = notas.length + (lista ? lista.length : 0)
+  const nCom = notas.length + (lista ? lista.length : 0) + (listaSt ? listaSt.length : 0)
   const hayCatena = ['mat', 'mar', 'luc', 'jua'].includes(book.id)
 
   return (
@@ -69,13 +72,19 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
             <div className="padres">
               {notas.length > 0 && <h4 className="secc">Notas de Nácar-Colunga</h4>}
               {notas.map((n, i) => <p key={i} className="ncnotefull">{n.t}</p>)}
+              <h4 className="secc">Notas de Mons. Straubinger</h4>
+              {listaSt === null && <p className="muted">Cargando…</p>}
+              {listaSt && listaSt.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
+              {listaSt && listaSt.map((e, i) => <NotaSt key={i} e={e} />)}
               <h4 className="secc">Santos Padres</h4>
               {hayCatena && <label className="toggle"><input type="checkbox" checked={prefs.medievales} onChange={e => setPrefs({ ...prefs, medievales: e.target.checked })} /> Incluir también a los comentaristas medievales (Teofilacto, Rábano, Glosa…)</label>}
               {lista === null && <p className="muted">Cargando comentarios…</p>}
               {padErr && <p className="error">{padErr}</p>}
               {lista && lista.length === 0 && <p className="muted">{hayCatena ? 'No hay comentarios de los Padres para este versículo en la Catena Aurea.' : 'De momento solo hay comentarios de los Padres en castellano para los cuatro Evangelios (Catena Aurea). Iremos añadiendo más libros.'}</p>}
               {lista && lista.map((e, i) => <Comentario key={i} e={e} a={aut[e.a]} />)}
+              <p className="fuente">Notas: La Sagrada Biblia, traducción y comentario de Mons. Juan Straubinger (1948).</p>
               {lista && lista.length > 0 && <p className="fuente">Catena Aurea de Santo Tomás de Aquino: comentarios de los Santos Padres a los Evangelios, en traducción castellana (texto de mercaba.org).</p>}
+
             </div>
           )}
           {tab === 'mias' && (
@@ -94,6 +103,16 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
         </div>
       </section>
     </div>
+  )
+}
+
+function NotaSt({ e }) {
+  const [abierto, setAbierto] = useState(e.t.length < 900)
+  return (
+    <article className="coment">
+      <div className={'q' + (abierto ? '' : ' cut')} lang="es">{e.t}</div>
+      {!abierto && <footer><button className="link" onClick={() => setAbierto(true)}>Leer completo</button></footer>}
+    </article>
   )
 }
 

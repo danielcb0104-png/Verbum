@@ -3,6 +3,7 @@
 Aplicación para leer en el móvil la **Sagrada Biblia (Biblia de Navarra)**. Al tocar cada versículo puedes ver:
 
 - el **texto latino de la Neovulgata** (Nova Vulgata, edición oficial de la Iglesia), con la misma numeración,
+- las **notas de Mons. Juan Straubinger** (Biblia comentada, 1948) para toda la Biblia,
 - los **comentarios de los Santos Padres en castellano** (Catena Aurea de Santo Tomás, para los cuatro Evangelios).
 
 Además puedes **marcar fragmentos** con colores, **escribir comentarios** sobre lo marcado y consultar en un **índice de todos los libros** dónde están tus marcas y comentarios. Todo se sincroniza con tu cuenta de Supabase y funciona sin conexión.

@@ -191,3 +191,5 @@ textarea { font-family: var(--serif); line-height: 1.5; resize: vertical; }
 
 .secc { font-family: var(--sans); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--acc); margin: 14px 0 6px; }
 .secc:first-child { margin-top: 2px; }
+
+.autor.cb { font-family: var(--sans); font-size: 14px; color: var(--acc); }

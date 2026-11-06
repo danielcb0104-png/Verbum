@@ -82,10 +82,8 @@ export default function App() {
 }
 
 function NavBar({ view }) {
-  const last = S.lastPos.get()
   const items = [
     ['indice', 'Índice', '#/', IconBook],
-    ['leer', 'Leer', last ? `#/l/${last.libro}/${last.cap}` : '#/l/gen/1', IconRead],
     ['marcas', 'Mis marcas', '#/marcas', IconMark],
     ['buscar', 'Buscar', '#/buscar', IconSearch],
     ['ajustes', 'Ajustes', '#/ajustes', IconGear]
