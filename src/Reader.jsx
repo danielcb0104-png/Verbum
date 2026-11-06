@@ -66,7 +66,7 @@ export default function Reader({ route }) {
     const nb = e.target.closest('[data-nota]')
     if (nb) { const n = verses.find(x => x.v === v.v)?.n?.[+nb.dataset.nota]; if (n) setNota({ v: v.v, t: n.t }); return }
     const um = e.target.closest('[data-um]')
-    if (um) { const m = marcas.find(x => x.id === um.dataset.um); if (m) { setEditor({ mark: m }); return } }
+    if (um) { const m = marcas.find(x => x.id === um.dataset.um); if (m) { setNota({ v: m.v_ini, t: m.nota, propia: true, texto: m.texto }); return } }
     setSel(x => (x?.type === 'verses' && x.vs.has(v.v) ? null : { type: 'verses', vs: new Set([v.v]) }))
   }
 
@@ -172,8 +172,9 @@ export default function Reader({ route }) {
       {nota && (
         <div className="sheet-backdrop" onClick={() => setNota(null)}>
           <div className="popnote" onClick={e => e.stopPropagation()}>
-            <div className="popnote-h">Nota de Nácar-Colunga · {book.abbr} {cap},{nota.v}<button className="iconbtn" onClick={() => setNota(null)} aria-label="Cerrar"><IconClose /></button></div>
-            <p>{nota.t}</p>
+            <div className="popnote-h">{nota.propia ? 'Tu nota' : 'Nota'} · {book.abbr} {cap},{nota.v}<button className="iconbtn" onClick={() => setNota(null)} aria-label="Cerrar"><IconClose /></button></div>
+            {nota.texto && <p className="popnote-q">«{nota.texto}»</p>}
+            <p className="popnote-t">{nota.t}</p>
           </div>
         </div>
       )}

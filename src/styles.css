@@ -152,6 +152,8 @@ textarea { font-family: var(--serif); line-height: 1.5; resize: vertical; }
 .popnote { background: var(--card); max-width: 600px; width: calc(100% - 24px); margin: 0 auto auto; margin-top: 20vh; border-radius: 14px; padding: 6px 16px 14px; font-family: var(--serif); line-height: 1.55; box-shadow: 0 10px 40px rgba(0,0,0,.25); }
 .sheet-backdrop:has(.popnote) { align-items: flex-start; }
 .popnote-h { display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-size: 13px; font-weight: 700; color: var(--acc); }
+.popnote-q { color: var(--ink2); font-style: italic; margin: 4px 0 8px; border-left: 3px solid var(--line); padding-left: 10px; }
+.popnote-t { white-space: pre-wrap; margin: 0; max-height: 55vh; overflow-y: auto; }
 
 /* ---------- marcas ---------- */
 .mymark { display: grid; gap: 4px; width: 100%; text-align: left; text-decoration: none; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-left: 6px solid var(--line); border-radius: 12px; padding: 10px 12px; margin: 8px 0; cursor: pointer; }
