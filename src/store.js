@@ -41,7 +41,7 @@ async function loadPrivate(path) {
   try { await idbSet(k, d) } catch { /* ignore */ }
   return d
 }
-export const loadNC = id => cached('nc:' + id, () => loadPrivate(`nc/${id}.json`))
+export const loadNC = id => cached('nc:' + id, () => loadPrivate(`navarra/${id}.json`))
 export const loadPadresIndex = () => cached('pidx', () => loadPrivate('padres/index.json'))
 export const loadPadres = (id, c) => cached(`pad:${id}:${c}`, async () => {
   const idx = await loadPadresIndex()
@@ -110,7 +110,7 @@ export async function deleteMarca(id) {
   if (error) throw error
 }
 
-// ---------------- correcciones del texto (OCR) ----------------
+// ---------------- correcciones personales del texto ----------------
 const LS_CORR = 'biblia.correcciones'
 export async function listCorrecciones() {
   if (LOCAL) return lsGet(LS_CORR, [])
@@ -135,6 +135,6 @@ export async function saveCorreccion(libro, cap, vers, texto) {
 
 // ---------------- preferencias ----------------
 const LS_PREF = 'biblia.prefs'
-export const loadPrefs = () => ({ font: 19, tema: 'claro', latin: false, medievales: true, notasNC: true, ...lsGet(LS_PREF, {}) })
+export const loadPrefs = () => ({ font: 19, tema: 'claro', latin: false, medievales: true, notasNC: false, ...lsGet(LS_PREF, {}) })
 export const savePrefs = p => lsSet(LS_PREF, p)
 export const lastPos = { get: () => lsGet('biblia.pos', null), set: p => lsSet('biblia.pos', p) }

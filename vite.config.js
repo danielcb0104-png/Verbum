@@ -13,9 +13,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
       manifest: {
-        name: 'Biblia Nácar-Colunga',
-        short_name: 'Biblia NC',
-        description: 'Sagrada Biblia Nácar-Colunga con Vulgata y comentarios de los Padres',
+        name: 'Sagrada Biblia',
+        short_name: 'Biblia',
+        description: 'Sagrada Biblia (Navarra) con Vulgata y comentarios de los Santos Padres',
         lang: 'es',
         theme_color: '#7a2e2e',
         background_color: '#faf6ef',

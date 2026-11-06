@@ -1,10 +1,9 @@
-# Biblia Nácar-Colunga (app web instalable)
+# Sagrada Biblia (app web instalable)
 
-Aplicación para leer en el móvil la **Sagrada Biblia Nácar-Colunga (1944)**. Al tocar cada versículo puedes ver:
+Aplicación para leer en el móvil la **Sagrada Biblia (Biblia de Navarra)**. Al tocar cada versículo puedes ver:
 
-- el **texto latino de la Vulgata Clementina**,
-- los **comentarios de los Santos Padres en castellano** (Catena Aurea de Santo Tomás, para los cuatro Evangelios),
-- las **notas de Nácar-Colunga**.
+- el **texto latino de la Neovulgata** (Nova Vulgata, edición oficial de la Iglesia), con la misma numeración,
+- los **comentarios de los Santos Padres en castellano** (Catena Aurea de Santo Tomás, para los cuatro Evangelios).
 
 Además puedes **marcar fragmentos** con colores, **escribir comentarios** sobre lo marcado y consultar en un **índice de todos los libros** dónde están tus marcas y comentarios. Todo se sincroniza con tu cuenta de Supabase y funciona sin conexión.
 
@@ -14,7 +13,7 @@ Además puedes **marcar fragmentos** con colores, **escribir comentarios** sobre
 |---|---|
 | `src/` | Código de la app (React + Vite, PWA) |
 | `public/data/` | Datos públicos: índice de libros y Vulgata (dominio público) |
-| `privado/nc/` | **Texto Nácar-Colunga** (73 JSON). No se sube a GitHub: va al almacenamiento privado de Supabase |
+| `privado/navarra/` | **Texto de la Biblia de Navarra** (73 JSON). No se sube a GitHub público: va al almacenamiento privado de Supabase |
 | `privado/padres/` | **Catena Aurea en castellano** por capítulo (Evangelios). También privado |
 | `supabase/schema.sql` | Tablas, seguridad (RLS) y bucket privado |
 | `.github/workflows/deploy.yml` | Publicación automática en GitHub Pages |
@@ -52,8 +51,6 @@ npm run dev
 Sin las variables `VITE_SUPABASE_*` la app funciona en **modo local** (las marcas se guardan en el navegador).
 
 ## Sobre el texto
-- El texto castellano procede del OCR del escaneo de Internet Archive de la edición BAC de 1944, convertido versículo a versículo de forma automática. Puede contener erratas de reconocimiento y algunos versículos agrupados (p. ej. «7-8») cuando el número no se reconoció. Desde la pestaña **Corregir** de cada versículo puedes arreglarlo; la corrección se guarda en tu cuenta.
-- La Nácar-Colunga tiene derechos de autor (BAC). Este montaje es **para uso personal**: el texto solo se descarga con sesión iniciada y no está en el repositorio público.
-- Vulgata Clementina: texto de dominio público (repositorio `mborders/vulgata`, licencia MIT).
-- Santos Padres: Catena Aurea de Santo Tomás de Aquino en traducción castellana (texto publicado en mercaba.org), solo Evangelios por ahora. Al ser una traducción con posibles derechos, también se guarda en el bucket privado.
-- Versificación: Nácar-Colunga numera los Salmos según el hebreo (con la numeración de la Vulgata indicada en el título de cada salmo). La app hace la correspondencia automáticamente para mostrar el latín.
+- Texto castellano: Biblia de Navarra (Facultad de Teología de la Universidad de Navarra), tomado del texto que publica EWTN. Tiene derechos de autor: es **para uso personal** y solo se descarga con sesión iniciada.
+- Latín: Nova Vulgata (vatican.va), con la misma numeración que la Biblia de Navarra.
+- Santos Padres: Catena Aurea de Santo Tomás de Aquino en traducción castellana (texto publicado en mercaba.org), solo Evangelios por ahora; también privada.

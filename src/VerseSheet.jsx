@@ -34,7 +34,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
 
   const misMarcas = marcas.filter(m => m.libro === book.id && m.cap === cap && m.v_ini <= v2 && m.v_fin >= v1)
   const latin = vul ? Array.from({ length: v2 - v1 + 1 }, (_, i) => vul[cap - 1]?.[v1 + i]).filter(Boolean).join(' ') : null
-  const ref = `${book.abbr} ${cap},${v1}${v2 > v1 ? '-' + v2 : ''}`
+  const ref = `${book.abbr} ${cap},${verse.l || v1}${v2 > v1 ? '-' + v2 : ''}`
   const notas = verse.n || []
   const nCom = notas.length + (lista ? lista.length : 0)
   const hayCatena = ['mat', 'mar', 'luc', 'jua'].includes(book.id)
@@ -61,8 +61,8 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
         <div className="sheetbody">
           {tab === 'latin' && (
             <div className="latin">
-              {latin === null ? <p className="muted">Cargando…</p> : latin ? <p lang="la">{latin}</p> : <p className="muted">No hay correspondencia directa en la Vulgata Clementina para este versículo (la numeración difiere).</p>}
-              <p className="fuente">Biblia Sacra Vulgatae Editionis (Clementina, 1592).</p>
+              {latin === null ? <p className="muted">Cargando…</p> : latin ? <p lang="la">{latin}</p> : <p className="muted">No hay texto latino para este versículo.</p>}
+              <p className="fuente">Nova Vulgata, edición oficial latina de la Iglesia (vatican.va).</p>
             </div>
           )}
           {tab === 'padres' && (
@@ -120,7 +120,7 @@ function Corregir({ book, cap, verse, actual, api, toast }) {
   const changed = actual[key] !== undefined
   return (
     <div className="corregir">
-      <p className="muted">El texto procede del escaneo de la edición de 1944 y puede contener errores de reconocimiento. Corrígelo aquí; el cambio se guarda en tu cuenta.</p>
+      <p className="muted">Si encuentras una errata, corrígela aquí; el cambio se guarda solo en tu cuenta.</p>
       <textarea value={t} onChange={e => setT(e.target.value)} rows={6} />
       <div className="row">
         <button className="btn primary" onClick={async () => { try { await api.corregir(book.id, cap, verse.v, t.trim() === verse.t ? null : t.trim()); toast('Corrección guardada') } catch (e) { toast(e.message) } }}>Guardar corrección</button>

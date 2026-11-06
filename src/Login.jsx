@@ -19,7 +19,7 @@ export default function Login() {
       <div className="login-card">
         <div className="login-cross" aria-hidden="true">✠</div>
         <h1>Sagrada Biblia</h1>
-        <p className="sub">Versión Nácar-Colunga · Vulgata · Santos Padres</p>
+        <p className="sub">Biblia de Navarra · Vulgata · Santos Padres</p>
         <form onSubmit={submit}>
           <label>Correo<input type="email" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="email" /></label>
           <label>Contraseña<input type="password" value={pw} onChange={e => setPw(e.target.value)} required minLength={6} autoComplete={modo === 'entrar' ? 'current-password' : 'new-password'} /></label>

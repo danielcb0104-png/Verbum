@@ -98,7 +98,7 @@ export default function Reader({ route }) {
   async function copiar() {
     const r = selRange(); if (!r) return
     const ref = refMarca(book, { cap, v_ini: r.v_ini, v_fin: r.v_fin })
-    try { await navigator.clipboard.writeText(`«${r.texto}» (${ref}, Nácar-Colunga)`); toast('Copiado') } catch { toast('No se pudo copiar') }
+    try { await navigator.clipboard.writeText(`«${r.texto}» (${ref}, Biblia de Navarra)`); toast('Copiado') } catch { toast('No se pudo copiar') }
     window.getSelection()?.removeAllRanges(); setSel(null)
   }
 
@@ -126,11 +126,11 @@ export default function Reader({ route }) {
           <React.Fragment key={v.v}>
             {v.h && v.h.map((h, i) => <h3 key={i} className="vhead">{h}</h3>)}
             <span id={'v' + v.v} className={'verse' + (sel?.type === 'verses' && sel.vs.has(v.v) ? ' selected' : '')}>
-              <button className={'vn' + ((v.n && v.n.length) || (pcount && hasPadres(pidx, book.id, cap, v)) ? ' pp' : '')} onClick={() => setSheet({ v: v.v })} aria-label={`Versículo ${v.v}: comentarios y Vulgata`}>
-                {v.v2 ? `${v.v}-${v.v2}` : v.v}
+              <button className={'vn' + ((v.n && v.n.length) || (pcount && hasPadres(pidx, book.id, cap, v)) ? ' pp' : '')} onClick={() => setSheet({ v: v.v })} aria-label={`Versículo ${v.l || v.v}: comentarios y Vulgata`}>
+                {v.l || (v.v2 ? `${v.v}-${v.v2}` : v.v)}
               </button>
               <span className="vt" data-v={v.v} onClick={e => onTextClick(e, v)}>
-                <VerseText text={textOf(v)} v={v} marcas={capMarcas} notasNC={prefs.notasNC} poesia={poesia} />
+                <VerseText text={textOf(v)} v={v} marcas={capMarcas} notasNC={false} poesia={poesia} />
               </span>
               {prefs.latin && vul && <span className="lat" lang="la">{Array.from({ length: (v.v2 || v.v) - v.v + 1 }, (_, i) => vul[cap - 1]?.[v.v + i]).filter(Boolean).join(' ')}</span>}
               {' '}

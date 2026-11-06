@@ -36,12 +36,11 @@ export default function Ajustes() {
           </div>
         </div>
         <label className="setrow"><span>Mostrar la Vulgata bajo cada versículo</span><input type="checkbox" checked={prefs.latin} onChange={e => set('latin', e.target.checked)} /></label>
-        <label className="setrow"><span>Mostrar llamadas a las notas de Nácar-Colunga</span><input type="checkbox" checked={prefs.notasNC} onChange={e => set('notasNC', e.target.checked)} /></label>
         <label className="setrow"><span>Incluir comentaristas medievales en la Catena Aurea</span><input type="checkbox" checked={prefs.medievales} onChange={e => set('medievales', e.target.checked)} /></label>
       </section>
       <section className="card">
         <h2>Sin conexión</h2>
-        <p className="muted">Descarga los 73 libros (≈5 MB) para leer sin internet. Los comentarios se guardan a medida que los consultas.</p>
+        <p className="muted">Descarga los 73 libros (≈4 MB) para leer sin internet. Los comentarios se guardan a medida que los consultas.</p>
         <button className="btn" onClick={descargarTodo} disabled={prog !== null && prog < 100}>{prog === null ? 'Descargar toda la Biblia' : prog < 100 ? `Descargando… ${prog}%` : 'Descargada ✓'}</button>
       </section>
       <section className="card">
@@ -54,10 +53,9 @@ export default function Ajustes() {
       </section>
       <section className="card about">
         <h2>Fuentes</h2>
-        <p><b>Texto castellano:</b> Sagrada Biblia, versión directa de las lenguas originales por Eloíno Nácar Fuster y Alberto Colunga, O.P. (BAC, 1944), digitalizado a partir del ejemplar de Internet Archive, solo para uso personal.</p>
-        <p><b>Latín:</b> Vulgata Clementina.</p>
+        <p><b>Texto castellano:</b> Sagrada Biblia, traducción de la Facultad de Teología de la Universidad de Navarra (Biblia de Navarra), según el texto publicado por EWTN. Solo para uso personal.</p>
+        <p><b>Latín:</b> Nova Vulgata (Neovulgata), con la misma numeración que el texto castellano.</p>
         <p><b>Santos Padres:</b> Catena Aurea de Santo Tomás de Aquino (Evangelios), traducción castellana publicada en mercaba.org.</p>
-        <p><b>Notas:</b> notas de la edición Nácar-Colunga.</p>
       </section>
     </main>
   )

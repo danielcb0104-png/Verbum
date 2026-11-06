@@ -97,7 +97,7 @@ textarea { font-family: var(--serif); line-height: 1.5; resize: vertical; }
 @keyframes flash { 0%, 40% { background: var(--y); } 100% { background: transparent; } }
 .sep { display: block; height: 0; }
 .text.blocks .sep + * , .sep { }
-.lat { display: block; font-style: italic; font-size: .82em; color: var(--ink2); margin: .1em 0 .5em 1.2em; line-height: 1.45; text-align: left; }
+.lat { white-space: normal; display: block; font-style: italic; font-size: .82em; color: var(--ink2); margin: .1em 0 .5em 1.2em; line-height: 1.45; text-align: left; }
 .hl { border-radius: 3px; padding: .05em 0; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .hl-amarillo { background: var(--y); } .hl-verde { background: var(--g); } .hl-azul { background: var(--b); } .hl-rosa { background: var(--p); } .hl-naranja { background: var(--o); }
 .hl-subrayado { text-decoration: underline var(--u); text-decoration-thickness: 2px; text-underline-offset: 3px; }
