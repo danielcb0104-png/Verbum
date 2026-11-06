@@ -5,7 +5,7 @@ import { COLORES, refMarca } from './util.js'
 export default function MarkEditor({ book, cap, mark, range, onClose, onStudy }) {
   const { api, toast } = useContext(Ctx)
   const base = mark || { ...range, libro: book.id, cap }
-  const [color, setColor] = useState(mark ? mark.color : 'ninguno')
+  const color = mark ? mark.color : 'ninguno'
   const [nota, setNota] = useState(mark?.nota || '')
   const [busy, setBusy] = useState(false)
   async function guardar() {
@@ -33,11 +33,7 @@ export default function MarkEditor({ book, cap, mark, range, onClose, onStudy })
           <button className="iconbtn" onClick={onClose} aria-label="Cerrar"><IconClose /></button>
         </header>
         <div className="sheetbody">
-          <div className="colors big">
-            <button className={'sw ninguno' + (color === 'ninguno' ? ' on' : '')} onClick={() => setColor('ninguno')} title="Sin color" aria-label="Sin color">∅</button>
-            {COLORES.map(c => <button key={c.id} className={'sw ' + c.id + (color === c.id ? ' on' : '')} onClick={() => setColor(c.id)} title={c.nombre} aria-label={c.nombre} />)}
-          </div>
-          <label className="lbl">Tu comentario
+          <label className="lbl">Tu nota
             <textarea value={nota} onChange={e => setNota(e.target.value)} rows={6} placeholder="Escribe aquí tu reflexión, una referencia, una idea para la oración…" autoFocus={!mark} />
           </label>
           <div className="row">
@@ -46,7 +42,7 @@ export default function MarkEditor({ book, cap, mark, range, onClose, onStudy })
             {mark && <button className="btn danger" onClick={borrar} disabled={busy}>Eliminar</button>}
             <button className="btn ghost" onClick={onClose}>Cancelar</button>
           </div>
-          {color === 'ninguno' && !nota.trim() && <p className="muted small">Elige un color o escribe un comentario.</p>}
+          
         </div>
       </section>
     </div>

@@ -67,11 +67,7 @@ export default function Reader({ route }) {
     if (nb) { const n = verses.find(x => x.v === v.v)?.n?.[+nb.dataset.nota]; if (n) setNota({ v: v.v, t: n.t }); return }
     const um = e.target.closest('[data-um]')
     if (um) { const m = marcas.find(x => x.id === um.dataset.um); if (m) { setEditor({ mark: m }); return } }
-    setSel(x => {
-      const vs = new Set(x?.type === 'verses' ? x.vs : [])
-      vs.has(v.v) ? vs.delete(v.v) : vs.add(v.v)
-      return vs.size ? { type: 'verses', vs } : null
-    })
+    setSel(x => (x?.type === 'verses' && x.vs.has(v.v) ? null : { type: 'verses', vs: new Set([v.v]) }))
   }
 
   function selRange() {
@@ -196,6 +192,8 @@ function hasPadres(pidx, id, cap, v) {
 function ajustaPalabras(rr, getText) {
   const W = /[\p{L}\p{N}]/u
   let { v_ini, off_ini, v_fin, off_fin } = rr
+  // solo un versículo: si la selección pasa al siguiente, se corta al final del primero
+  if (v_fin !== v_ini) { v_fin = v_ini; off_fin = getText(v_ini).length }
   const ta = getText(v_ini), tb = getText(v_fin)
   while (off_ini > 0 && W.test(ta[off_ini - 1]) && W.test(ta[off_ini] || '')) off_ini--
   while (off_ini < ta.length && /\s/.test(ta[off_ini])) off_ini++

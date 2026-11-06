@@ -43,7 +43,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
       .sort((x, y) => (k(x.e[0], x.e[1]) - k(x.s[0], x.s[1])) - (k(y.e[0], y.e[1]) - k(y.s[0], y.s[1])))
   }, [cb, cap, v1, v2])
   const listaSt = useMemo(() => st ? st.filter(e => e.v >= v1 && e.v <= v2) : null, [st, v1, v2])
-  const misMarcas = marcas.filter(m => m.libro === book.id && m.cap === cap && m.v_ini <= v2 && m.v_fin >= v1)
+  const misMarcas = marcas.filter(m => m.nota && m.libro === book.id && m.cap === cap && m.v_ini <= v2 && m.v_fin >= v1)
   const latin = vul ? Array.from({ length: v2 - v1 + 1 }, (_, i) => vul[cap - 1]?.[v1 + i]).filter(Boolean).join(' ') : null
   const ref = `${book.abbr} ${cap},${verse.l || v1}${v2 > v1 ? '-' + v2 : ''}`
   const notas = verse.n || []
@@ -65,7 +65,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
           {[
             ['padres', `Comentarios${lista ? ' (' + nCom + ')' : ''}`],
             ['latin', 'Vulgata'],
-            ['mias', `Mías${misMarcas.length ? ' (' + misMarcas.length + ')' : ''}`]
+            ['mias', `Mis notas${misMarcas.length ? ' (' + misMarcas.length + ')' : ''}`]
           ].map(([k, l]) => <button key={k} role="tab" aria-selected={tab === k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{l}</button>)}
         </div>
         <div className="sheetbody">
@@ -101,7 +101,7 @@ export default function VerseSheet({ book, cap, verse, text, onClose, onEditMark
           )}
           {tab === 'mias' && (
             <div>
-              {misMarcas.length === 0 && <p className="muted">No tienes marcas ni comentarios en este versículo. Selecciona texto o toca el versículo para marcarlo.</p>}
+              {misMarcas.length === 0 && <p className="muted">No tienes notas en este versículo. Para añadir una, toca el versículo y pulsa «Comentar».</p>}
               {misMarcas.map(m => (
                 <button key={m.id} className={'mymark hlb-' + m.color} onClick={() => onEditMark(m)}>
                   <span className="mref">{refMarca(book, m)}</span>
