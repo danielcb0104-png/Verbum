@@ -85,14 +85,14 @@ export default function VerseSheet({ book, cap, verse, text, onClose }) {
               {listaSt && listaSt.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
               {listaSt && listaSt.map((e, i) => <NotaSt key={i} e={e} />)}
               <h4 className="secc">Santos Padres</h4>
-              <p className="subtit">De la Catena Aurea, obra que Santo Tomás de Aquino compuso hacia 1262-1264 por encargo del papa Urbano IV: para cada pasaje de los cuatro Evangelios reúne, encadenados, textos de los Padres griegos y latinos. Traducción castellana publicada en mercaba.org.</p>
+              <p className="subtit">Los Santos Padres son los escritores cristianos de los primeros siglos —como San Agustín, San Juan Crisóstomo, San Jerónimo o San Gregorio Magno— a quienes la Iglesia reconoce por la santidad de su vida y la rectitud de su doctrina como testigos privilegiados de la Tradición. Sus comentarios han sido desde la antigüedad una guía para leer la Escritura con la fe de la Iglesia.</p>
               {hayCatena && <label className="toggle"><input type="checkbox" checked={prefs.medievales} onChange={e => setPrefs({ ...prefs, medievales: e.target.checked })} /> Incluir también a los comentaristas medievales (Teofilacto, Rábano, Glosa…)</label>}
               {lista === null && <p className="muted">Cargando comentarios…</p>}
               {padErr && <p className="error">{padErr}</p>}
               {lista && lista.length === 0 && <p className="muted">Sin nota para este versículo.</p>}
               {lista && lista.map((e, i) => <Comentario key={i} e={e} a={aut[e.a]} />)}
               <h4 className="secc">Comentarios papales</h4>
-              <p className="subtit">Catequesis de San Juan Pablo II y Benedicto XVI sobre los salmos y cánticos de Laudes y Vísperas (2001-2006) y de Benedicto XVI sobre otros salmos (2011), y alocuciones del Ángelus y Regina Caeli de Benedicto XVI y Francisco sobre el Evangelio del domingo. Textos oficiales en castellano de la Santa Sede (vatican.va). En las catequesis, los salmos se citan con la numeración litúrgica, que a menudo es uno menos que la de esta Biblia.</p>
+              <p className="subtit">El Papa, obispo de Roma, es el sucesor de San Pedro, a quien Cristo dijo: «Tú eres Pedro, y sobre esta piedra edificaré mi Iglesia» (Mt 16,18) y confió el encargo de apacentar sus ovejas (Jn 21,15-17) y confirmar en la fe a sus hermanos (Lc 22,32). Como pastor de toda la Iglesia, explica la Palabra de Dios al pueblo cristiano; aquí se recogen comentarios de San Juan Pablo II, Benedicto XVI y Francisco.</p>
               {listaPp === null && <p className="muted">Cargando…</p>}
               {listaPp && listaPp.length === 0 && <p className="muted">Sin comentario para este versículo.</p>}
               {listaPp && listaPp.map((e, i) => <ComentarioPapa key={i} e={e} book={book} />)}
